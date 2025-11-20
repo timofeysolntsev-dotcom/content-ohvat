@@ -76,6 +76,56 @@
     .modal form input,.modal form textarea{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:12px;min-height:44px}
     .modal .row{display:grid;gap:12px;grid-template-columns:1fr}
     @media(min-width:720px){.modal .row{grid-template-columns:1fr 1fr}}
+  /* === Color vignette + animated background === */
+    body{position:relative}
+    body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+      background:
+        radial-gradient(60% 70% at -10% -10%, rgba(0,200,83,.20), transparent 60%),
+        radial-gradient(60% 70% at 110% 110%, rgba(0,200,83,.20), transparent 60%),
+        radial-gradient(40% 40% at 100% 0%, rgba(4,153,71,.12), transparent 60%),
+        radial-gradient(40% 40% at 0% 100%, rgba(4,153,71,.12), transparent 60%);
+      filter:saturate(1.05)}
+    @keyframes bgfloat {
+      0%   {transform:translate(-12%, -8%) scale(1)}
+      50%  {transform:translate(8%, 6%) scale(1.08)}
+      100% {transform:translate(-12%, -8%) scale(1)}
+    }
+    body::after{content:"";position:fixed;left:50%;top:20%;width:60vmax;height:60vmax;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(0,200,83,.22), transparent 58%),
+        radial-gradient(circle at 70% 70%, rgba(4,153,71,.14), transparent 60%);
+      filter:blur(42px);opacity:.55;animation:bgfloat 18s ease-in-out infinite alternate}
+    @media (prefers-reduced-motion: reduce){ body::after{animation:none} }
+
+    /* усиленная виньетка в hero */
+    .hero{background:
+      radial-gradient(900px 500px at 0% 0%, rgba(0,200,83,.20), transparent 60%),
+      radial-gradient(900px 500px at 100% 100%, rgba(0,200,83,.16), transparent 60%),
+      linear-gradient(180deg,#ffffff 0%, #f7fffb 100%)}
+  /* === Section accents / inner liveliness === */
+    /* gradient underline for section titles */
+    h2.center{position:relative}
+    h2.center::after{content:"";display:block;width:84px;height:4px;margin:10px auto 0;border-radius:999px;
+      background:linear-gradient(90deg, rgba(0,200,83,0), rgba(0,200,83,.6), rgba(0,200,83,0));}
+
+    /* gradient borders + soft glow on key panels */
+    #steps .panel, #why .panel, #why-video .panel{
+      background:linear-gradient(#fff,#fff) padding-box,
+                 linear-gradient(135deg, rgba(0,200,83,.28), rgba(4,153,71,.14)) border-box;
+      border:1px solid transparent; box-shadow:0 6px 24px rgba(0,0,0,.05);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    #steps .panel:hover, #why .panel:hover, #why-video .panel:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,0,0,.10)}
+
+    /* pricing cards get a subtle inner gradient */
+    .pricing .card{background:linear-gradient(180deg,#ffffff 0%, #fbfffd 100%)}
+    .pricing .card.card--featured{background:linear-gradient(180deg,#ffffff 0%, #f2fff7 100%)}
+
+    /* optional gentle reveal (no motion if reduced) */
+    @keyframes revealUp{from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0}
+    .reveal.in{opacity:1;animation:revealUp .6s ease both}
+    @media (prefers-reduced-motion: reduce){ .reveal.in{animation:none;opacity:1} }
   </style>
 </head>
 <body>
@@ -112,7 +162,7 @@
   <!-- Шаги сотрудничества -->
   <section class="section" id="steps">
     <div class="container">
-      <h2 class="center">Как мы работаем: 3 шага</h2>
+      <h2 class="center reveal">Как мы работаем: 3 шага</h2>
       <div class="grid cols-3" style="margin-top:16px">
         <div class="panel">
           <h3>Шаг 1 — созвон и фиксация цели</h3>
@@ -159,7 +209,7 @@
   <!-- Зачем бизнесу продвигать видео -->
   <section class="section" id="why-video">
     <div class="container">
-      <h2 class="center">Зачем бизнесу продвигать видео</h2>
+      <h2 class="center reveal">Зачем бизнесу продвигать видео</h2>
       <div class="grid cols-3" style="margin-top:16px">
         <div class="panel">
           <h3>Быстрый охват и узнаваемость</h3>
@@ -180,7 +230,7 @@
   <!-- Тарифы -->
   <section class="section" id="pricing">
     <div class="container pricing">
-      <h2 class="center">Тарифы</h2>
+      <h2 class="center reveal">Тарифы</h2>
       <p class="center muted">Выберите конфигурацию размещений. Итоговый диапазон охвата фиксируем в заявке. Если видео снято вирально, просмотры могут быть значительно выше.</p>
       <div class="grid cols-3" style="margin-top:16px">
         <div class="panel card">
@@ -297,7 +347,10 @@
   <footer class="section" style="padding:36px 0;border-top:1px solid #eef1f4">
     <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
       <div style="font-weight:800;color:var(--green)">Контент Охват</div>
-      <div class="small">© 2025 • White‑hat методика • Запуск за 24 часа</div>
+      <div class="small" style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+        <a href="#privacy" class="small" aria-label="Политика конфиденциальности">Политика конфиденциальности</a>
+        <span>© 2025 • White‑hat методика • Запуск за 24 часа</span>
+      </div>
     </div>
   </footer>
 
@@ -452,6 +505,13 @@
       console.group('%cSelf‑tests: Контент Охват','color:#00C853;font-weight:700');
       tests.forEach(x=>console.log((x.pass?'✅':'❌'), x.name));
       console.groupEnd();
+    })();
+  // reveal on scroll (IntersectionObserver)
+    (function(){
+      const els=[...document.querySelectorAll('.reveal')];
+      if(!('IntersectionObserver'in window)||!els.length) return els.forEach(e=>e.classList.add('in'));
+      const io=new IntersectionObserver((entries)=>{entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}})},{threshold:.2});
+      els.forEach(e=>io.observe(e));
     })();
   </script>
 </body>
